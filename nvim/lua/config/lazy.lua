@@ -13,6 +13,19 @@ require("lazy").setup({
   -- Sensible defaults
   { "tpope/vim-sensible" },
 
+  -- Treesitter for syntax highlighting
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "lua", "go", "javascript", "typescript" },
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end,
+  },
+
   -- File explorer
   {
     "nvim-tree/nvim-tree.lua",
@@ -104,6 +117,16 @@ require("lazy").setup({
           },
         },
       })
+      -- TypeScript/JavaScript LSP config
+      lspconfig.ts_ls.setup({
+        on_attach = function(client, bufnr)
+          -- Turn off formatting if using Prettier or something else
+          client.server_capabilities.documentFormattingProvider = false
+          -- Optional: keymaps or other setup per buffer
+        end,
+        -- Optional: filetypes if you want to limit to JS/TS
+        -- filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+      })
     end,
   },
 
@@ -119,11 +142,29 @@ require("lazy").setup({
   { "nvim-lualine/lualine.nvim" },
 
   -- Colorscheme
+  -- {
+  --   "catppuccin/nvim",
+  --   name = "catppuccin",
+  --   priority = 1000,
+  -- },
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "Mofiqul/vscode.nvim",
     priority = 1000,
+    config = function()
+      -- Optional: Set style (available: "dark", "light")
+      vim.o.background = "dark"
+
+      require("vscode").setup({
+        -- Optional configuration
+        transparent = false,
+        italic_comments = true,
+      })
+
+      -- Apply the colorscheme
+      vim.cmd("colorscheme vscode")
+    end,
   },
+
 
   -- GitHub Copilot
   { "github/copilot.vim" }

@@ -10,5 +10,5 @@ vim.opt.smartindent = true
 vim.opt.termguicolors = true
 
 vim.g.mapleader = " "
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("vscode")
 

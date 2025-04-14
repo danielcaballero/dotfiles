@@ -1,6 +1,7 @@
 -- ~/.config/nvim/lua/config/keymaps.lua
 local keymap = vim.keymap.set
 local opts = { noremap = true, silent = true }
+local builtin = require("telescope.builtin")
 
 -- ─────────────────────────────────────────────────────────
 -- File explorer toggle
@@ -9,6 +10,19 @@ keymap("n", "<leader>e", ":NvimTreeToggle<CR>", opts)
 -- ─────────────────────────────────────────────────────────
 -- Telescope mappings
 keymap("n", "<leader>ff", "<cmd>Telescope find_files<CR>", opts)
+-- keymap("n", "<leader>p", "<cmd>Telescope oldfiles<CR>", opts)
+-- Oldfiles in normal mode
+keymap("n", "<leader>p", function()
+  builtin.oldfiles({
+    initial_mode = "normal",
+    layout_strategy = "horizontal",
+    layout_config = {
+      preview_width = 0.6,
+      width = 0.9,
+      height = 0.85,
+    }
+  })
+end, opts)
 keymap("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", opts)
 keymap("n", "<leader>fb", "<cmd>Telescope buffers<CR>", opts)
 keymap("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", opts)
@@ -49,4 +63,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
   end,
 })
-
