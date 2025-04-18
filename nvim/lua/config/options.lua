@@ -1,4 +1,5 @@
 -- ~/.config/nvim/lua/config/options.lua
+-- This file contains the configuration options for Neovim.
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.mouse = "a"
