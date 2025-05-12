@@ -1,17 +1,22 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# -----------------------------------------------------------------------------
+#  Powerlevel10k instant‑prompt preamble  (keep this at the very top!)
+# -----------------------------------------------------------------------------
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # -----------------------------------------------------------------------------
-#  Core environment (portable across machines)
+#  Core environment  (portable across machines)
 # -----------------------------------------------------------------------------
 export LANG=en_US.UTF-8
 export LC_ALL=$LANG
 
-# Homebrew (Apple‑silicon first, Intel fallback) and user binaries first in PATH
+# Silence “console output during zsh init” reminder
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
+# -----------------------------------------------------------------------------
+#  PATH: Homebrew (Apple‑silicon first, Intel fallback) and user binaries first
+# -----------------------------------------------------------------------------
 if [[ -d /opt/homebrew/bin ]]; then
   PATH="/opt/homebrew/bin:$HOME/bin:$PATH"
 else
@@ -20,14 +25,19 @@ fi
 export PATH
 
 # -----------------------------------------------------------------------------
-#  Oh‑My‑Zsh & Theme
+#  Oh‑My‑Zsh & Powerlevel10k theme
 # -----------------------------------------------------------------------------
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"   # requires theme installed in $ZSH_CUSTOM/themes
+ZSH_THEME="powerlevel10k/powerlevel10k"   # theme must exist in $ZSH_CUSTOM/themes
 
-# Auto‑update reminder every 14 days
+# Load Powerlevel10k *before* anything that may print to the terminal
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+# -----------------------------------------------------------------------------
+#  Oh‑My‑Zsh auto‑update
+# -----------------------------------------------------------------------------
 zstyle ':omz:update' mode reminder
-zstyle ':omz:update' frequency 14
+zstyle ':omz:update' frequency 14          # days
 
 # -----------------------------------------------------------------------------
 #  Plugins
@@ -35,9 +45,9 @@ zstyle ':omz:update' frequency 14
 plugins=(
   git
   nvm                       # lazy‑loads nvm
-  zsh-autosuggestions       # make sure plugin dirs exist in $ZSH_CUSTOM/plugins
+  zsh-autosuggestions
   history-substring-search
-  zsh-syntax-highlighting   # must stay last
+  zsh-syntax-highlighting   # must be last
 )
 
 source "$ZSH/oh-my-zsh.sh"
@@ -70,7 +80,4 @@ alias ll='ls -lAh'
 #  Optional: SCM Breeze (comment out if unused)
 # -----------------------------------------------------------------------------
 [ -s "$HOME/.scm_breeze/scm_breeze.sh" ] && source "$HOME/.scm_breeze/scm_breeze.sh"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 

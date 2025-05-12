@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-set -e          # stop the script if anything fails
+# Symlink all dotfiles into the home directory and install Zsh plugins.
+set -euo pipefail
 
-# Where this script lives (i.e. your dotfiles repo root)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-mkdir -p ~/.config   # make sure ~/.config exists
+mkdir -p ~/.config   # ensure XDG config dir exists
 
-link () {
+link() {
   local src="$1" dst="$2"
-
-  [ ! -e "$src" ] && return      # if the source isn't there, skip
-
-  rm -rf "$dst"                  # remove whatever is there (file, dir, or link)
-  ln -s "$src" "$dst"            # make the new symlink
+  [[ -e "$src" ]] || return             # skip if source missing
+  rm -rf "$dst"                          # remove old file/dir/link
+  ln -s "$src" "$dst"
   echo "linked: $dst → $src"
 }
 
@@ -21,3 +19,9 @@ link "$SCRIPT_DIR/nvim"                 ~/.config/nvim
 link "$SCRIPT_DIR/tmux/.tmux.conf"      ~/.tmux.conf
 link "$SCRIPT_DIR/zsh/.zshrc"           ~/.zshrc
 link "$SCRIPT_DIR/p10k/.p10k.zsh"       ~/.p10k.zsh
+
+# ---------------------------------------------------------------------------
+# Install required Zsh plugins (runs only if missing)
+# ---------------------------------------------------------------------------
+bash "$SCRIPT_DIR/zsh/install-plugins.sh"
+
